@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>html,body{width:100%;height:100%;margin:0;overflow:hidden}iframe{display:block;width:100%;height:100%;border:0}.visibility-message{box-sizing:border-box;display:grid;min-height:100%;place-items:center;padding:24px;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#334155;background:#f8fafc}</style>
+<script>
+(() => {
+    try {
+        const endpoint = "http://localhost/api/analytics/v1/collect/9a711114-d2cb-4a99-a383-d663841df171";
+        const cryptoApi = window.crypto;
+        let eventId = null;
+
+        if (cryptoApi && typeof cryptoApi.randomUUID === 'function') {
+            eventId = cryptoApi.randomUUID();
+        } else if (cryptoApi && typeof cryptoApi.getRandomValues === 'function') {
+            const bytes = cryptoApi.getRandomValues(new Uint8Array(16));
+            bytes[6] = (bytes[6] & 15) | 64;
+            bytes[8] = (bytes[8] & 63) | 128;
+            const hex = Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('');
+            eventId = [hex.slice(0, 8), hex.slice(8, 12), hex.slice(12, 16), hex.slice(16, 20), hex.slice(20)].join('-');
+        }
+
+        if (!eventId) {
+            return;
+        }
+
+        let referrerHost = '';
+
+        if (document.referrer) {
+            try {
+                referrerHost = new URL(document.referrer).hostname.toLowerCase();
+            } catch (error) {
+                referrerHost = '';
+            }
+        }
+
+        const payload = JSON.stringify({
+            event_id: eventId,
+            path: window.location.pathname,
+            referrer_host: referrerHost,
+        });
+
+        if (typeof navigator.sendBeacon === 'function' && navigator.sendBeacon(endpoint, payload)) {
+            return;
+        }
+
+        if (typeof window.fetch === 'function') {
+            window.fetch(endpoint, {
+                method: 'POST',
+                body: payload,
+                headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+                credentials: 'omit',
+                mode: 'cors',
+                keepalive: true,
+            }).catch((error) => undefined);
+        }
+    } catch (error) {
+        // Analytics must never block the hosted page.
+    }
+})();
+</script>
+<script>
+window.__uaVisibilityAllowed = (() => {
+    try {
+        const userAgent = navigator.userAgent || '';
+        const normalizedUserAgent = userAgent.toLowerCase();
+        const platforms = [{"rules":[{"type":"contains","value":"MicroMessenger"},{"type":"contains","value":"WeChat"},{"type":"contains","value":"Weixin"}]},{"rules":[{"type":"contains","value":"Alipay"}]},{"rules":[{"type":"contains","value":"Bytedance"}]},{"rules":[{"type":"contains","value":"QQ"}]}];
+
+        if (!userAgent || !Array.isArray(platforms)) {
+            return false;
+        }
+
+        return platforms.some((platform) => Array.isArray(platform.rules) && platform.rules.some((rule) => {
+            if (!rule || typeof rule.value !== 'string' || rule.value === '') {
+                return false;
+            }
+
+            if (rule.type === 'contains') {
+                return normalizedUserAgent.includes(rule.value.toLowerCase());
+            }
+
+            if (rule.type === 'regex') {
+                try {
+                    return new RegExp(rule.value, 'i').test(userAgent);
+                } catch (error) {
+                    return false;
+                }
+            }
+
+            return false;
+        }));
+    } catch (error) {
+        return false;
+    }
+})();
+</script>
+</head>
+<body>
+
+<script>
+window.__staticPageReady = (async () => {
+    try {
+        if (window.__uaVisibilityAllowed !== true) {
+            const encoded = "PCFkb2N0eXBlIGh0bWw+CjxodG1sIGxhbmc9InpoLUNOIj4KPGhlYWQ+CjxtZXRhIGNoYXJzZXQ9InV0Zi04Ij4KPG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9IndpZHRoPWRldmljZS13aWR0aCxpbml0aWFsLXNjYWxlPTEiPgo8c3R5bGU+aHRtbCxib2R5e2hlaWdodDoxMDAlO21hcmdpbjowfWJvZHl7ZGlzcGxheTpncmlkO3BsYWNlLWl0ZW1zOmNlbnRlcjtmb250LWZhbWlseTpzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSwiU2Vnb2UgVUkiLHNhbnMtc2VyaWY7YmFja2dyb3VuZDojZjhmYWZjO2NvbG9yOiMwZjE3MmF9bWFpbnt0ZXh0LWFsaWduOmNlbnRlcjtwYWRkaW5nOjI0cHh9aDF7bWFyZ2luOjAgMCA4cHg7Zm9udC1zaXplOjQ4cHh9cHttYXJnaW46MDtjb2xvcjojNjQ3NDhifTwvc3R5bGU+CjwvaGVhZD4KPGJvZHk+PG1haW4+PGgxPjQwNDwvaDE+PHA+6aG16Z2i5LiN5a2Y5Zyo5oiW5pqC5pe25peg5rOV6K6/6Zeu44CCPC9wPjwvbWFpbj48L2JvZHk+CjwvaHRtbD4=";
+            const bytes = Uint8Array.from(atob(encoded), (character) => character.charCodeAt(0));
+            const html = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+            document.open();
+            document.write(html);
+            document.close();
+
+            return;
+        }
+        const material = {"kdf":"PBKDF2","hash":"SHA-256","iterations":600000,"challenge":"g8iD7zxcOLRC7tCOKz8/zCgbwAGtnLo4wdmdwbZXgAg=","salt":"z1/kjlUTg7Ff8QTVDwIeMw==","expected":"OT0y3cuU2thlbIJETUPziBC4RdABPKCdCEHfuZiW1fs="};
+        const decodeBase64 = (value) => Uint8Array.from(
+            atob(value),
+            (character) => character.charCodeAt(0),
+        );
+        const crypto = window.crypto;
+
+        if (!crypto || !crypto.subtle
+            || typeof crypto.subtle.importKey !== 'function'
+            || typeof crypto.subtle.deriveBits !== 'function'
+            || material.kdf !== 'PBKDF2' || material.hash !== 'SHA-256'
+            || material.iterations !== 600000) {
+            throw new Error('Unsupported protection material');
+        }
+
+        const challenge = decodeBase64(material.challenge);
+        const salt = decodeBase64(material.salt);
+        const expected = decodeBase64(material.expected);
+
+        if (challenge.length !== 32 || salt.length !== 16 || expected.length !== 32) {
+            throw new Error('Invalid protection material');
+        }
+
+        const keyMaterial = await crypto.subtle.importKey(
+            'raw',
+            challenge,
+            { name: 'PBKDF2' },
+            false,
+            ['deriveBits'],
+        );
+        const proof = new Uint8Array(await crypto.subtle.deriveBits(
+            {
+                name: 'PBKDF2',
+                hash: material.hash,
+                salt,
+                iterations: material.iterations,
+            },
+            keyMaterial,
+            256,
+        ));
+        let difference = proof.length ^ expected.length;
+
+        for (let index = 0; index < expected.length; index++) {
+            difference |= proof[index] ^ expected[index];
+        }
+
+        if (difference !== 0) {
+            throw new Error('Invalid proof of work');
+        }
+        const targetUrl = "https://dash.rustedge.io/";
+        const target = new URL(targetUrl);
+
+        if (!['http:', 'https:'].includes(target.protocol) || target.username || target.password) {
+            throw new Error('Invalid target URL');
+        }
+
+        const iframe = document.createElement('iframe');
+        iframe.src = target.toString();
+        iframe.allowFullscreen = true;
+        iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+
+        if (typeof document.getElementById === 'function') {
+            const loadingMessage = document.getElementById('loading-message');
+
+            if (loadingMessage && loadingMessage.parentNode) {
+                loadingMessage.parentNode.removeChild(loadingMessage);
+            }
+        }
+
+        document.body.appendChild(iframe);
+    } catch (error) {
+        document.body.innerHTML = '';
+    }
+})();
+</script>
+
+</body>
+</html>
