@@ -7,7 +7,7 @@
 <script>
 (() => {
     try {
-        const endpoint = "http://localhost/api/analytics/v1/collect/9a711114-d2cb-4a99-a383-d663841df171";
+        const endpoint = "https://test.0n.ink/api/analytics/v1/collect/9a711114-d2cb-4a99-a383-d663841df171";
         const cryptoApi = window.crypto;
         let eventId = null;
 
@@ -111,7 +111,7 @@ window.__staticPageReady = (async () => {
 
             return;
         }
-        const material = {"kdf":"PBKDF2","hash":"SHA-256","iterations":600000,"challenge":"ROyVyBCBZwnNly1tcbrbmTlRY/wNIn6pZqeiaHtR9nQ=","salt":"qgwNjiWq0m4usJeeDfzb9g==","expected":"NEd/b1ko+ImSNDlpnHw8dfRUpM5ao+H7WGzR70EzvBU="};
+        const material = {"kdf":"PBKDF2","hash":"SHA-256","iterations":600000,"challenge":"UNZ5Lylll0WPvn+nbj5rfQ9cSAie0TQwHR4z1n1KYr8=","salt":"/+JpYMreH8Lh16xp4+BGug==","expected":"R6KKloZjpizbEXpyM66nF/DyqXlJ/co1+Yp4B7XqcJo="};
         const decodeBase64 = (value) => Uint8Array.from(
             atob(value),
             (character) => character.charCodeAt(0),
